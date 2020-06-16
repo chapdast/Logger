@@ -10,6 +10,7 @@ import (
 )
 
 type Logger struct {
+	prefix string
 	logPath string
 	debug bool
 	dailySepration bool
@@ -18,8 +19,9 @@ type Logger struct {
 }
 
 // Create And Return a New Logger
-func New(logRoot string, debug bool, daily bool) *Logger{
+func New(logRoot string, prefix string, debug bool, daily bool) *Logger{
 	return &Logger{
+		prefix: prefix,
 		logPath: logRoot,
 		debug: debug,
 		dailySepration: daily,
@@ -38,11 +40,11 @@ func(l *Logger) log(tag string, msg ...interface{}) error{
 		}
 	}
 	t := time.Now()
-	var name = "log_"
+	var name = l.prefix+"_log_"
 	if l.dailySepration {
-		name = strconv.Itoa(t.Year()) + "_" + t.Month().String() + "_" + strconv.Itoa(t.Day()) + l.extention
+		name += strconv.Itoa(t.Year()) + "_" + t.Month().String() + "_" + strconv.Itoa(t.Day()) + l.extention
 	} else {
-		name = strconv.Itoa(t.Year()) + "_" + t.Month().String() + "_" + strconv.Itoa(t.Day()) + "_" + strconv.Itoa(t.Hour()) + l.extention
+		name += strconv.Itoa(t.Year()) + "_" + t.Month().String() + "_" + strconv.Itoa(t.Day()) + "_" + strconv.Itoa(t.Hour()) + l.extention
 	}
 	var file *os.File
 
